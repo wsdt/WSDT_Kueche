@@ -1,2 +1,2 @@
-Verknüpfung muss mit dem UNC-Pfad gesetzt werden. 
-Nicht über den Laufwerkbuchstaben M:\!!
+Damit das System funktioniert muss sich alles in
+einem Überordner namens 'WSDT_Kueche' befinden.

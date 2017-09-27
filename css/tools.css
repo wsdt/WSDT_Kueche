@@ -1,0 +1,35 @@
+
+/* STARRATING -----------------------------------------------------*/
+.rating {
+    overflow: hidden;
+    display: inline-block;
+}
+
+.rating-input {
+    float: right;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin: 0 0 0 -16px;
+    opacity: 0;
+}
+
+.rating-star, .rating:hover .rating-star {
+    float:right;
+    cursor: pointer;
+    position: relative;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: url('../img/star.png') 0 -16px;
+    background-size:16px 16px;
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); 
+    filter:gray;
+    -webkit-filter: grayscale(100%);
+}
+
+.rating:hover .rating-star:hover, .rating:hover .rating-star:hover ~ .rating-star, .rating-input:checked ~ .rating-star {
+    background-position: 0 0;
+    filter:none;
+    -webkit-filter:grayscale(0%);
+}

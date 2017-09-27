@@ -1,0 +1,273 @@
+/* Standard */
+* {
+	font-family: 'Work Sans', sans-serif;
+	text-align: justify;
+}
+
+#page { /*Full page without nav and footer*/
+	margin-left:20px;
+	margin-top:60px;
+}
+
+.hide {
+	opacity: 0;
+}
+
+.overlay_page {
+	position: absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	z-index: 1000;
+	background-color:#eee;
+}
+
+.db_fatal_error {
+	text-align:center;
+	font-weight: bold;
+	color:#fff;
+	padding:5px 0 5px 0;
+	background-color:#ff0000;
+	border-bottom:solid 2px #fff;
+}
+
+.error_msg {
+	color:#ff0000;
+	font-size:20px;
+	padding:20px;
+}
+
+#no_internet {
+	background-color:#ff0000;
+	color:#ffffff;
+	font-size:15px;
+	text-align: center;
+	padding:5px;
+}
+
+.notifyjs-corner {
+	z-index: 2021 !important; /* Notification bar should be over lightbox [z-index: 2020]*/
+}
+
+.lightbox-content {
+	padding:20px 20px 20px 20px;
+	margin-top:-10px;
+}
+
+.slbContent,.slbContent * {
+	overflow: hidden;
+	visibility: visible;
+}
+/*
+.slbContentOuter {
+	width:60%;
+}
+
+.slbContentOuter legend {
+	width:75%;
+}*/
+
+#addit_data_adminsettings .mark_me {
+	color:#ff0000;
+	font-weight: bold;
+}
+
+#addit_data_adminsettings {
+	text-align:center;
+	color:#fff;
+	display:none;
+	width:50%
+	margin:0 auto;
+}
+
+#addit_data_adminsettings #message {
+	background-color:#000;
+	padding:6px;
+}
+
+
+/*Simulate a table*/
+.table {
+	display:table;
+	padding:20px;
+	margin-top:-10px;
+	border-collapse: separate;
+	border-spacing: 10px;
+}
+.table-caption {
+	display:table-cell;
+	font-weight: bold;
+	padding-right:30px;
+}
+.table-row {
+	display:table-row;
+}
+.table-cell {
+	display:table-cell;
+}
+
+
+/* PAGE INFO - STANDARDS */
+#page_info #page_heading {
+	color:#8f0007;
+	margin-bottom:5px;
+}
+#page_info #page_description {
+
+}
+
+
+/* PAGE CONTENT - STANDARDS */
+#page_content {
+	display:table;
+	width:100%;
+	border-collapse: separate;
+	border-spacing: 10px;
+	margin:15px 0 15px 0;
+}
+
+#page_content .subheading {
+	color:#8f0007;
+	margin-bottom:3px;
+	margin-top:3px;
+}
+
+#page_content .page_content_module_row {
+	display:table-row;
+}
+
+#page_content .page_content_module {
+	display:table-cell;
+	border-color:#8f0007;
+	border-style: solid;
+	border-width: 1px;
+	padding:5px;
+	width:45%;
+	position:relative;
+}
+
+#page_content .page_content_module_description {
+	margin-bottom:30px;
+}
+
+
+#page_content .db_sub_menu {
+	margin-top:15px;
+	text-align:right;
+	position: absolute;
+	bottom:5px;
+	right:5px;
+}
+#page_content .db_sub_menu_right {
+	margin-top:15px;
+	text-align:left;
+	position: absolute;
+	width:100px;
+	bottom:5px;
+	left:5px;
+	margin-bottom:-5px !important;
+	display:inline-block !important;
+}
+
+#page_content .db_sub_menu_right form {
+	max-height: 0px;
+	height:0px;
+	margin:0;
+}
+
+
+#page_content .db_sub_menu_right img,#page_content .db_sub_menu_right label {
+	margin-right:8px;
+	float:left;
+	display:block;
+	width:25px;
+	cursor: pointer;
+	opacity: 1;
+    filter: alpha(opacity=100); /* For IE8 and earlier */
+}
+
+#page_content .db_sub_menu img {
+	margin-left:8px;
+	width:30px;
+	cursor: pointer;
+	opacity: 1;
+    filter: alpha(opacity=100); /* For IE8 and earlier */
+}
+#page_content .db_sub_menu img:hover, #page_content .db_sub_menu label:hover,#page_content .db_sub_menu_right img:hover, #page_content .db_sub_menu_right label:hover {
+	cursor: pointer;
+	opacity: 0.5;
+    filter: alpha(opacity=50); /* For IE8 and earlier */
+}
+
+
+
+
+/* FOOTER */
+footer #copyright {
+	color: #ccc;
+	font-size: 10px;
+	position:fixed;
+	right:0;
+	bottom:0;
+	left:0;
+	padding:4px;
+	text-align:left;
+}
+
+/*PRINT MODE
+Thanks to: https://stackoverflow.com/questions/468881/print-div-id-printarea-div-only;
+*/
+@media print {
+	body * {
+		visibility: hidden;
+	}
+	#section-to-print, #section-to-print * {
+		visibility: visible;
+	}
+	#section-to-print {
+		position: absolute;
+		left: 0;
+		top:0;
+	}
+}
+
+
+
+/* CSV IMPORT FORM 
+Thanks to https://tympanus.net/codrops/2015/09/15/styling-customizing-file-inputs-smart-way/*/
+.import_CSV_form input[type=file] {
+	width:0.1px;
+	height:0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+	cursor:pointer;
+}
+
+.import_CSV_form input[type=file] + .import_CSV_form label {
+	color:white;
+	background-color:#000;
+	display:inline-block;
+}
+
+/*
+schon in usermenü normalerweise
+.import_CSV_form input[type=file]:focus + label, 
+.import_CSV_form input[type=file] + label:hover {
+	opacity: 0.5;
+}*/
+
+.import_CSV_form input[type=file] + label {
+	cursor:pointer;
+}
+
+.import_CSV_form input[type=file]:focus + label {
+	outline:1px dotted #000;
+	outline:-webkit-focus-ring-color auto 5px;
+}
+
+.import_CSV_form input[type=file] + label * {
+	pointer-events: none;
+}

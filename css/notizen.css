@@ -1,0 +1,141 @@
+.note {
+	visibility: visible;
+	opacity:1;
+	width:200px;
+	height:200px;
+	background-color:#FFFACD;
+	margin:5px;
+	position:absolute;
+	display: inline-block;
+	padding:2px;
+	padding-right:5px;
+	border:solid 1px #F0E68C;
+	resize:both;
+	float:left;
+	/*Leichte aber schnelle Move-Transition*/
+	-webkit-transition: left 0.035s ease-in-out,top 0.035s ease-in-out,right 0.035s ease-in-out,bottom 0.035s ease-in-out;
+       -moz-transition: left 0.035s ease-in-out,top 0.035s ease-in-out,right 0.035s ease-in-out,bottom 0.035s ease-in-out;
+        -ms-transition: left 0.035s ease-in-out,top 0.035s ease-in-out,right 0.035s ease-in-out,bottom 0.035s ease-in-out;
+         -o-transition: left 0.035s ease-in-out,top 0.035s ease-in-out,right 0.035s ease-in-out,bottom 0.035s ease-in-out;
+            transition: left 0.035s ease-in-out,top 0.035s ease-in-out,right 0.035s ease-in-out,bottom 0.035s ease-in-out;
+
+    -webkit-transition: opacity 0.5s ease-in-out;
+       -moz-transition: opacity 0.5s ease-in-out;
+        -ms-transition: opacity 0.5s ease-in-out;
+         -o-transition: opacity 0.5s ease-in-out;
+            transition: opacity 0.5s ease-in-out;
+}
+
+.note * {
+	visibility: visible;
+}
+
+.note textarea {
+	background:transparent;
+	overflow:hidden;
+	margin:2px;
+	resize:none;/*maybe later with note size resizeable*/
+	max-width:90%;
+	max-height:85%;
+	border:0 none;
+	width:90%;
+	height:85%;
+	outline:none;
+	position:absolute;
+	color:#000;
+	box-sizing: border-box; /*for textarea full size to div*/
+	display:block;
+}
+
+.note input {
+	margin:3px 0 0 3px;
+	background: transparent;
+	overflow:hidden;
+	border:0;
+	outline:0;
+	border-bottom: 1px solid #F0E68C;
+	display:block;
+	width:85%;
+	font-weight:bold;
+}
+
+.note .dragme {
+	position:absolute;
+	top:2px;
+	right:2px;
+	margin:2px 2px 0 0;
+	cursor:move;
+	background-image:url("../img/drag.png");
+	width:20px;
+	height:20px;
+	background-size:20px;
+	z-index:1;
+}
+
+#page_description .note_menu img {
+	width:30px;
+	height:auto;
+	cursor:pointer;
+	opacity: 1;
+}
+
+#page_description .note_menu img:hover {
+	opacity:0.5;
+}
+
+#note_search_div {
+	top:80px;
+	right:8px;
+	position: absolute;
+}
+
+#note_search_div #note_search_options {
+	width:100px;
+	height:34px;
+	float:right;
+	margin-left:5px;
+}
+
+#note_search_div #note_search_options p {
+	margin:0 0 -2px 0;
+}
+
+#note_search_div #note_search_options input {
+	width:8px;
+	margin-top:0;
+	right:225px;
+}
+
+#note_search_div #note_search_options label {
+	font-size:9px;
+	margin-bottom:0;
+	float:right;
+}
+
+#page_enlarger {
+	background-color:#000;
+	color:#fff;
+	font-weight:bold;
+	text-align:center;
+	cursor:pointer;
+	position:relative;
+	bottom:0px;
+	margin-left:-20px;
+	padding:5px;
+}
+
+/*Trash bin 
+Copied from: http://saaction.blogspot.co.at/2014/04/animated-recycle-with-open-close-style.html
+*/
+.before_note_delete {
+
+}
+
+
+.trash{transition:opacity 200ms;width:58px;height:55px;opacity:0.8;position:absolute;top:130px;right:10px;vertical-align:middle;cursor:pointer;margin:50px auto 10px;}  
+ .trash > .lid{transform-origin:19% 100%;transition:transform 150ms;height:14px;width:58px;-webkit-transform-origin:-7% 100%}  
+ .trash > .can{background-position:0 -30px!important;width:58px;height:41px;margin:17px 0 0;padding:0!important}  
+ .trash > .can,.trash > .lid{background:url(../img/delete_note.png) 0 0 no-repeat;background-size:cover;position:absolute;right:8px;top:2px;-webkit-transform:rotate(0deg);-webkit-transition:-webkit-transform 250ms}  
+ .trash > .can:hover {border:none!important;box-shadow:none!important}  
+ .trash > span{display:inline-block}  
+ .trash:focus > .lid,.trash:hover > .lid,.trash_hover {transform:rotate(-45deg);transition:transform 250ms;-webkit-transform:rotate(-45deg);-webkit-transition:-webkit-transform 250ms}  
