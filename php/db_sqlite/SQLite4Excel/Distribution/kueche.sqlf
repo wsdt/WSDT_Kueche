@@ -1,0 +1,223 @@
+PRAGMA foreign_keys=ON;
+BEGIN TRANSACTION;
+
+/*PRIMARY KEYS MUST BE MANUALLY SET TO NOT NULL, 
+because of an SQLite-Bug! */
+CREATE TABLE Employee (
+	emp_id integer PRIMARY KEY AUTOINCREMENT not null,
+	emp_first_name text NOT NULL,
+	emp_last_name text NOT NULL,
+	emp_email text, /*Do not make unique, because NULL === NULL!*/
+	emp_phone text,
+	/*Jeder User soll auf alle Emp zugreifen können! */
+	cre_id text NOT NULL,/*Jeder User soll eigene Sternliste haben*/
+	FOREIGN KEY (cre_id) REFERENCES Credentials (id)
+	ON DELETE CASCADE ON UPDATE CASCADE
+);
+/*INSERT INTO Employee VALUES(1,'Kevin','Riedl','kevin.riedl.privat@gmail.com','+4365015448451');
+INSERT INTO Employee VALUES(2,'Markus','Peer','maggo@peer.com','066451515615');*/
+CREATE TABLE Assessment (
+	ass_id integer PRIMARY KEY AUTOINCREMENT not null,
+	/*ass_isPositiveFeedback boolean NOT NULL, /*0=false, 1=true*/
+	ass_amount_stars integer default 1 NOT NULL,
+	ass_description text NOT NULL,
+	ass_zeitpunkt timestamp
+	DEFAULT (DATETIME(CURRENT_TIMESTAMP,'LOCALTIME')), /* '2007-01-01 10:00:00' */
+	ass_emp_id integer,
+	cre_id text, /*Nicht jeder User soll Assessments anderer sehen*/
+	FOREIGN KEY (ass_emp_id) REFERENCES Employee (emp_id)
+	ON DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (cre_id) REFERENCES Credentials (id)
+	ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Note (
+	note_id integer PRIMARY KEY AUTOINCREMENT not null, /*Nr. from note1, note2, etc.*/
+	note_title text,
+	note_content text,
+	note_position text,
+	note_flags text,
+	note_categories text,
+	note_created timestamp
+	DEFAULT (DATETIME(CURRENT_TIMESTAMP,'LOCALTIME')),
+	cre_id text,
+	FOREIGN KEY (cre_id) REFERENCES Credentials (id)
+	ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Credentials (
+	id text PRIMARY KEY, /*DEFAULT 'super_user', /*just one row allowed*/
+	password text /*allow empty passwords*/
+);
+
+/*MEALS----------------------------------------------------------------*/
+/*CREATE TABLE Allergen (
+	all_kuerzel text PRIMARY KEY,
+	all_kurzbeschreibung text,
+	all_langbeschreibung text,
+	cre_id text,
+	FOREIGN KEY (cre_id) REFERENCES Credentials (id)
+	
+);*/
+
+CREATE TABLE Prodplatz (
+	pro_id text PRIMARY KEY not null,
+	pro_beschreibung text,
+	cre_id text,
+	FOREIGN KEY (cre_id) REFERENCES Credentials (id)
+	ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE Meal (
+	mea_id integer PRIMARY KEY AUTOINCREMENT not null,
+	mea_titel text NOT NULL,
+	mea_beschreibung text,
+	mea_allergene text, /*CONTAINS AN ARRAY*/
+	pro_id text,
+	cre_id text,
+	FOREIGN KEY (pro_id) REFERENCES Prodplatz (pro_id)
+	ON DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (cre_id) REFERENCES Credentials (id)
+	ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+/*MONITOR TABLES START ---------------------------------*/
+CREATE TABLE Meal_Monitor (
+	mmo_id integer PRIMARY KEY AUTOINCREMENT not null DEFAULT(0),
+	/*mmo_bezeichnung text, /*STELLE ATTRIBUTES AUS KOMPONENTEN_GERICHT ZUSAMMEN evtl, Attr. einfach weglassen und über select adden*/
+	/*IMPORTANT: Create Bezeichnung aus Komponente_Gericht*/
+	pln_id integer,
+	tgz_id text,
+	wtg_id integer,
+	kta_id integer,
+	kpn_id_1 integer,
+	kpn_id_2 integer,
+	kpn_id_3 integer,
+	kpn_id_4 integer,
+	mmo_condiments text,
+	mmo_garnitur text,
+	mmo_gewicht_gramm integer,
+	cre_id text,
+	FOREIGN KEY (cre_id) REFERENCES Credentials (id)
+	ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (wtg_id) REFERENCES Wochentag (wtg_id)
+	ON DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (tgz_id) REFERENCES Tageszeit (tgz_id)
+	ON DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (pln_id) REFERENCES Plan (pln_id)
+	ON DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (kpn_id_1,kpn_id_2,kpn_id_3,kpn_id_4) REFERENCES Komponente (kpn_id,kpn_id,kpn_id,kpn_id)
+	ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE MMO_KTA_Zwischentabelle (
+	kta_id integer,
+	mmo_id integer,
+	FOREIGN KEY (kta_id) REFERENCES Kostart (kta_id)
+	ON DELETE SET NULL ON UPDATE CASCADE,
+	FOREIGN KEY (mmo_id) REFERENCES Meal_Monitor (mmo_id)
+	ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE Kostart (
+	kta_id integer PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT(0),
+	kta_lang text NOT NULL,
+	kta_kurz text
+);
+
+CREATE TABLE Komponente (
+	kpn_id integer PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT (0),
+	kpn_gericht integer,
+	kpn_menge text, /*z.B. Schöpfer 8, 200g ...*/
+	FOREIGN KEY (kpn_gericht) REFERENCES Meal (mea_id)
+	ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+CREATE TABLE Wochentag (
+	wtg_id integer PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT(1), /*1 erster Tag*/
+	wtg_kurz text not null,
+	wtg_lang text
+);
+INSERT INTO Wochentag VALUES
+	(1,'Mo','Montag'),
+	(2,'Di','Dienstag'),
+	(3,'Mi','Mittwoch'),
+	(4,'Do','Donnerstag'),
+	(5,'Fr','Freitag'),
+	(6,'Sa','Samstag'),
+	(7,'So','Sonntag');
+
+CREATE TABLE Plan (
+	pln_id integer PRIMARY KEY AUTOINCREMENT not null
+);
+INSERT INTO Plan VALUES (1),(2),(3),(4);
+
+CREATE TABLE Tageszeit (
+	tgz_id text PRIMARY KEY not null
+);
+INSERT INTO Tageszeit VALUES ('Vormittag'),('Mittag'),('Abend');
+
+/*For easier queries create a view*/
+CREATE VIEW v_Meal_Monitor_Related AS 
+	SELECT mmo.mmo_id as mmo_id,('Plan '||mmo.pln_id||' '||mmo.tgz_id) as xxx_Plan,
+		(SELECT kta_lang FROM Kostart as kta WHERE kta.kta_id=mmo.kta_id) as xxx_Kostart, /*4 Vorstellen damit printTable nicht zu viel wegkürzt*/
+		(SELECT wtg_lang FROM Wochentag as wtg WHERE wtg.wtg_id=mmo.wtg_id) as xxx_Wochentag,
+		(SELECT k.kpn_gericht FROM Komponente as k WHERE k.kpn_id=mmo.kpn_id_1) as kpn_komponente_1,
+		(SELECT k.kpn_gericht FROM Komponente as k WHERE k.kpn_id=mmo.kpn_id_2) as kpn_komponente_2,
+		(SELECT k.kpn_gericht FROM Komponente as k WHERE k.kpn_id=mmo.kpn_id_3) as kpn_komponente_3,
+		(SELECT k.kpn_gericht FROM Komponente as k WHERE k.kpn_id=mmo.kpn_id_4) as kpn_komponente_4,
+		mmo.mmo_condiments as mmo_condiments,mmo.mmo_garnitur as mmo_garnitur,mmo.mmo_gewicht_gramm as mmo_gewicht_gramm FROM Meal_Monitor as mmo;
+
+
+/*MONITOR TABLES END ----------------------------------*/
+
+/*Auflösungstabelle für N:M Allergen:Meal*/
+/*CREATE TABLE Allergenzuweisung (
+	all_kuerzel text,
+	mea_id text,
+	PRIMARY KEY(all_kuerzel,mea_id),
+	FOREIGN KEY (all_kuerzel) REFERENCES Allergen (all_kuerzel)
+	,
+	FOREIGN KEY (mea_id) REFERENCES Meal (mea_id)
+	
+);*/
+
+/*########################NOT FULL IMPLEMENTED IN WSDT####################################*/
+/*TABLES FOR Dienst-/Urlaubsplan
+CREATE TABLE Department (
+	dep_kostenstelle integer PRIMARY KEY,
+	dep_bereich text,
+	dep_organisationseinheit text,
+	cre_id text,
+	FOREIGN KEY (cre_id) REFERENCES Credentials (id)
+	ON DELETE CASCADE
+);
+
+CREATE TABLE DPLKuerzel ( /*Dienstplan Kürzel
+	dpl_kuerzel text PRIMARY KEY, /*Mit Text auch Kürzel für U usw eintragbar
+	dpl_kuerzelvalue integer NOT NULL,
+	cre_id text,
+	FOREIGN KEY (cre_id) REFERENCES Credentials (id)
+);
+
+CREATE TABLE Plantag ( /*Später auch für Urlaubsplan (nicht nur Dienstplan)
+	pl_tag integer,
+	pl_monat integer,
+	pl_jahr integer,
+	pl_zellinhalt text,
+	pl_emp_id integer,
+	/*select * from ... where (allacc=0 and cre_id=session_id) OR allacc=1;
+	/*if allacc != 0 and != 1 then if allcc==sess_id (accname) dann zeigen
+	pl_show_all_accounts text DEFAULT '0', /*Standard: nicht zeigen
+	cre_id text,
+	PRIMARY KEY (pl_tag,pl_monat,pl_jahr,pl_emp_id), /*auch emp_id sonst nicht mehrere Zeilen möglich
+	FOREIGN KEY (cre_id) REFERENCES Credentials (id),
+	FOREIGN KEY (pl_emp_id) REFERENCES Employee (emp_id),
+	FOREIGN KEY (pl_zellinhalt) REFERENCES DP_Kuerzel (dp_ku_kuerzel)
+);*/
+
+
+INSERT INTO Credentials (id) VALUES ('super_user');
+
+COMMIT;
+
